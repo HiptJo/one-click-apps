@@ -1,0 +1,153 @@
+captainVersion: 4
+services:
+    $$cap_appname-prod:
+        restart: always
+        environment:
+            MYSQL_HOST: $$cap_mysql_host
+            MYSQL_DB: $$cap_mysql_db_prod
+            MYSQL_USER: $$cap_mysql_user_prod
+            MYSQL_PASSWORD: $$cap_mysql_password_prod
+            MYSQL_CONNECTION_LIMIT: $$cap_mysql_connection_limit_prod
+            REGISTRY_TOKEN: $$cap_registry_token
+            REGISTRY_PROJECT_KEY: $$cap_appname
+            REGISTRY_BRANCH: prod
+            ADMIN_BASIC: null
+        caproverExtra:
+            containerHttpPort: '80'
+            dockerfileLines:
+                - FROM node:15.7.0-alpine3.10
+                - RUN mkdir -p /usr/src/app
+                - WORKDIR /usr/src/app
+                - COPY ./ /usr/src/app/
+                - RUN npm install --production
+                - ENV NODE_ENV production
+                - ENV PORT 80
+                - EXPOSE 80
+                - CMD ["npm","start"]
+    $$cap_appname-pilot:
+        restart: always
+        environment:
+            MYSQL_HOST: $$cap_mysql_host
+            MYSQL_DB: $$cap_mysql_db_pilot
+            MYSQL_USER: $$cap_mysql_user_pilot
+            MYSQL_PASSWORD: $$cap_mysql_password_pilot
+            MYSQL_CONNECTION_LIMIT: $$cap_mysql_connection_limit_pilot
+            REGISTRY_TOKEN: $$cap_registry_token
+            REGISTRY_PROJECT_KEY: $$cap_appname
+            REGISTRY_BRANCH: pilot
+            ADMIN_BASIC: $$cap_admin_basic_password
+        caproverExtra:
+            containerHttpPort: '80'
+            dockerfileLines:
+                - FROM node:15.7.0-alpine3.10
+                - RUN mkdir -p /usr/src/app
+                - WORKDIR /usr/src/app
+                - COPY ./ /usr/src/app/
+                - RUN npm install --production
+                - ENV NODE_ENV production
+                - ENV PORT 80
+                - EXPOSE 80
+                - CMD ["npm","start"]
+    $$cap_appname-dev:
+        restart: always
+        environment:
+            MYSQL_HOST: $$cap_mysql_host
+            MYSQL_DB: $$cap_mysql_db_dev
+            MYSQL_USER: $$cap_mysql_user_dev
+            MYSQL_PASSWORD: $$cap_mysql_password_dev
+            MYSQL_CONNECTION_LIMIT: $$cap_mysql_connection_limit_dev
+            REGISTRY_TOKEN: $$cap_registry_token
+            REGISTRY_PROJECT_KEY: $$cap_appname
+            REGISTRY_BRANCH: dev
+            ADMIN_BASIC: $$cap_admin_basic_password
+        caproverExtra:
+            containerHttpPort: '80'
+            dockerfileLines:
+                - FROM node:15.7.0-alpine3.10
+                - RUN mkdir -p /usr/src/app
+                - WORKDIR /usr/src/app
+                - COPY ./ /usr/src/app/
+                - RUN npm install --production
+                - ENV NODE_ENV production
+                - ENV PORT 80
+                - EXPOSE 80
+                - CMD ["npm","start"]
+caproverOneClickApp:
+    variables:
+        - description: HiptmairIT Registry Token, Used for error logging
+          id: $$cap_registry_token
+          label: Registry Token
+
+        - description: Used for all environments
+          defaultValue: srv-captain--mysql-db
+          id: $$cap_mysql_host
+          label: MySQL Hostname
+
+        - description: Used for Prod Environment
+          defaultValue: $$cap_appname
+          id: $$cap_mysql_db_prod
+          label: MySQL DB name (production)
+        - description: Used for Prod Environment
+          defaultValue: www
+          id: $$cap_mysql_user_prod
+          label: MySQL username (production)
+        - description: Used for Prod Environment
+          id: $$cap_mysql_password_prod
+          label: MySQL password (production)
+        - description: Used for Prod Environment
+          defaultValue: 50
+          id: $$cap_mysql_connection_limit_prod
+          label: MySQL connection limit (production)
+
+        - description: Used for Pilot Environment
+          defaultValue: $$cap_appname_p
+          id: $$cap_mysql_db_pilot
+          label: MySQL DB name (pilot)
+        - description: Used for Pilot Environment
+          defaultValue: www
+          id: $$cap_mysql_user_pilot
+          label: MySQL username (pilot)
+        - description: Used for Pilot Environment
+          id: $$cap_mysql_password_pilot
+          label: MySQL password (pilot)
+        - description: Used for Pilot Environment
+          defaultValue: 20
+          id: $$cap_mysql_connection_limit_pilot
+          label: MySQL connection limit (pilot)
+
+        - description: Used for Development Environment
+          defaultValue: $$cap_appname_d
+          id: $$cap_mysql_db_dev
+          label: MySQL DB name (dev)
+        - description: Used for Development Environment
+          defaultValue: www
+          id: $$cap_mysql_user_dev
+          label: MySQL username (dev)
+        - description: Used for Development Environment
+          id: $$cap_mysql_password_dev
+          label: MySQL password (dev)
+        - description: Used for Development Environment
+          defaultValue: 10
+          id: $$cap_mysql_connection_limit_dev
+          label: MySQL connection limit (dev)
+
+        - description: Used for authentication on dev/pilot
+          id: $$cap_admin_basic_password
+          label: Admin Basic Password
+    instructions:
+        start: >-
+            This package can be used to prepare three containers for HiptmairIT Project Servers.
+        end: >-
+            Deployed Applications: 
+            Production: $$cap_appname-prod.$$cap_root_domain
+            Pilot: $$cap_appname-pilot.$$cap_root_domain
+            Development: $$cap_appname-dev.$$cap_root_domain
+
+            Todo: 
+            - Enable WS-support
+            - Create SSL-Certificate
+            -
+    displayName: HiptmairIT NODE-NG
+    isOfficial: true
+    description: This will create three NodeJS containers. You will need to create and configure the database information manually.
+    documentation: Maintainer https://www.hiptmairit.at
