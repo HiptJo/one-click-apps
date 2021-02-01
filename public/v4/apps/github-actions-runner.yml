@@ -1,0 +1,31 @@
+captainVersion: 4
+services:
+    github-actions-runner-$$cap_appname:
+        restart: always
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+            RUNNER_NAME: GITHUB-ACTIONS-RUNNER-$$cap_appname
+            RUNNER_REPOSITORY_URL: $$cap_runner_repo
+            RUNNER_LABEL: GITHUB-ACTIONS-RUNNER-$$cap_appname
+            RUNNER_TOKEN: $$cap_runner_token
+        image: tcardonne/github-runner:latest
+        caproverExtra:
+            notExposeAsWebApp: 'true'
+caproverOneClickApp:
+    variables:
+        - description: e.g. https://github.com/HiptJo/develop_vsunterweitersdorf
+          id: $$cap_runner_repo
+          label: Github Repository Url
+          defaultValue: https://github.com/
+        - id: $$cap_runner_token
+          label: Github Runner Token
+    instructions:
+        start: >-
+            This package can be used to create a GitHub Actions Runner
+        end: >-
+            Thank you!
+    displayName: Github Actions Runner
+    isOfficial: true
+    description: This can be used to setup a Github Actions Runner.
+    documentation: Maintainer https://www.hiptmairit.at
