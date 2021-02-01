@@ -95,7 +95,7 @@ caproverOneClickApp:
           id: $$cap_mysql_password_prod
           label: MySQL password (production)
         - description: Used for Prod Environment
-          defaultValue: 50
+          defaultValue: 100
           id: $$cap_mysql_connection_limit_prod
           label: MySQL connection limit (production)
 
@@ -111,7 +111,7 @@ caproverOneClickApp:
           id: $$cap_mysql_password_pilot
           label: MySQL password (pilot)
         - description: Used for Pilot Environment
-          defaultValue: 20
+          defaultValue: 40
           id: $$cap_mysql_connection_limit_pilot
           label: MySQL connection limit (pilot)
 
