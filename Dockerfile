@@ -4,6 +4,8 @@ COPY . .
 
 RUN npm install --production
 RUN npm run validate_apps && npm run build
+RUN ls dist
 
 FROM nginx
 COPY --from=build /home/dist /usr/share/nginx/html
+RUN ls /usr/share/nginx/html
