@@ -7,4 +7,4 @@ RUN ls dist
 
 FROM nginx
 COPY --from=build /home/dist /usr/share/nginx/html
-RUN ls /usr/share/nginx/html
+COPY index.html /usr/share/nginx/html/index.html
